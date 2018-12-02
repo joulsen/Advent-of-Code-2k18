@@ -8,42 +8,33 @@ Created on Sun Dec  2 16:23:03 2018
 # PART ONE
 from collections import Counter
 def getChecksum(IDs):
-    check1 = check2 = 0
+    check = [0,0]
     for ID in IDs:
-        double = triple = 0
-        frequency = Counter(ID).most_common()
-        for letter in frequency:
-            if letter[1] == 2:
-                double = 1
-            elif letter[1] == 3:
-                triple = 1
-        check1 += double
-        check2 += triple
-    return check1 * check2
-
+        counts = [count for i,count in Counter(ID).most_common()]
+        if 3 in counts:
+            check[0] += 1
+        if 2 in counts:
+            check[1] += 1
+    return check[0] * check[1]
+    
 # PART TWO
+from itertools import combinations
 def getCommons(IDs, n_common):
-    for ID in IDs:
-        for checkID in IDs:
-            zipped = list(zip(ID, checkID))
-            commons = []
-            for row in zipped:
-                if row[0] is not row[1]:
-                    commons.append(row)
-            if len(commons) == n_common:
-                for common in commons:
-                    zipped.remove(common)
-                commons = ""
-                for i in zipped:
-                    commons += i[0]
-                return [ID, checkID, commons]
+    for comparison in combinations(IDs,2):
+        commons = ""
+        for ID, cID in [comparison]:
+            for i in range(len(ID)):
+                if ID[i] == cID[i]:
+                    commons += ID[i]
+            if len(commons) == len(ID) - n_common:
+                return commons
 
 # Create array of each ID
 IDs = []
-with open("day2_input.txt") as file:
+with open("day2_input.txt", 'r') as file:
     for row in file:
         IDs.append(row)
 
 # Answers in console
 print("Answer to part one: %d" % (getChecksum(IDs)))
-print("Answer to part two: %s" % (getCommons(IDs, 1)[2]))
+print("Answer to part two: %s" % (getCommons(IDs, 1)))
