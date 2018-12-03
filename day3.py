@@ -10,7 +10,7 @@ import numpy as np
 claims = []
 with open("day3_input.txt") as file:
     for claim in file:
-        claims.append([int(i) for i in re.findall(r"\d+", claim)])
+        claims.append([int(i) for i in re.findall(r"-?\d+", claim)])
 
 
 # PART ONE
