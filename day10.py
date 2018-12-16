@@ -24,3 +24,6 @@ fig, ax = plt.subplots(figsize=(4,1))
 plt.plot(points[:,0], points[:,1], "rs")
 ax.invert_yaxis()
 ax.set_title("Advent of Code 2018 \n Day 10 \n Steps = %d s" % (step))
+
+fig.savefig("day10_result.png", dpi=100, bbox_inches='tight')
+plt.show()
