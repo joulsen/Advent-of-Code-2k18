@@ -7,6 +7,7 @@ Created on Sun Dec 16 19:40:08 2018
 import re
 import numpy as np
 from matplotlib import pyplot as plt
+
 points = [line for line in open("day10_input.txt", "r").read().splitlines()]
 points = [re.findall(r"(-?\d+)", line) for line in points]
 points = np.array(points, dtype=int)
