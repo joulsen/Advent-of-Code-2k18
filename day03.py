@@ -8,7 +8,7 @@ Created on Mon Dec  3 19:05:42 2018
 import re
 import numpy as np
 claims = []
-with open("day3_input.txt") as file:
+with open("day03_input.txt") as file:
     for claim in file:
         claims.append([int(i) for i in re.findall(r"-?\d+", claim)])
 

@@ -6,7 +6,7 @@ Created on Wed Dec 12 19:13:02 2018
 """
 import re
 import numpy as np
-orders = [re.findall(r"^Step ([A-Z]) must be finished before step ([A-Z]) can begin.$", line)[0] for line in open("day7_input.txt", "r").readlines()]
+orders = [re.findall(r"^Step ([A-Z]) must be finished before step ([A-Z]) can begin.$", line)[0] for line in open("day07_input.txt", "r").readlines()]
 orders = [tuple(map(lambda x : ord(x)-65, order)) for order in orders]
 
 # PART ONE

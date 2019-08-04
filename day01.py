@@ -5,7 +5,7 @@ Created on Sat Dec  1 17:19:58 2018
 @author: Supercigar
 """
 
-filepath = "day1_input.txt"
+filepath = "day01_input.txt"
 
 # PART ONE
 def partOne(freq):

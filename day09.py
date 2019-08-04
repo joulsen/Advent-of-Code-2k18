@@ -6,7 +6,7 @@ Created on Sun Dec 16 18:26:05 2018
 """
 from collections import deque
 from time import time
-parameters = [int(i) for i in open("day9_input.txt", "r").read().split() if i.isdigit()]
+parameters = [int(i) for i in open("day09_input.txt", "r").read().split() if i.isdigit()]
 
 # PART ONE & TWO
 def playGame(players, highest):

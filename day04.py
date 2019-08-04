@@ -7,7 +7,7 @@ Created on Tue Dec  4 19:49:53 2018
 
 import re
 from collections import Counter
-file = open("day4_input.txt")
+file = open("day04_input.txt")
 file = file.readlines()
 file.sort()
 

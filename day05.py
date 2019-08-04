@@ -8,7 +8,7 @@ Created on Fri Dec  7 22:51:08 2018
 import time
 
 # Newline ruined my life
-polymer = (open("day5_input.txt", "r")).read().splitlines()[0]
+polymer = (open("day05_input.txt", "r")).read().splitlines()[0]
 
 
 # PART ONE

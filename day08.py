@@ -6,7 +6,7 @@ Created on Sat Dec 15 15:17:33 2018
 """
 from anytree import Node, RenderTree
 import pdb
-data = [int(i) for i in open("day8_input.txt", "r").read().split()]
+data = [int(i) for i in open("day08_input.txt", "r").read().split()]
 
 # PART ONE
 def partOne(parent = None, first = True):

@@ -31,7 +31,7 @@ def getCommons(IDs, n_common):
 
 # Create array of each ID
 IDs = []
-with open("day2_input.txt", 'r') as file:
+with open("day02_input.txt", 'r') as file:
     for row in file:
         IDs.append(row)
 

@@ -7,7 +7,7 @@ Created on Sat Dec  8 22:30:11 2018
 
 import numpy as np
 from collections import Counter
-data = np.loadtxt("day6_input.txt", delimiter=", ", dtype=int)
+data = np.loadtxt("day06_input.txt", delimiter=", ", dtype=int)
 
 
 # PART ONE
