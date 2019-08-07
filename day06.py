@@ -1,39 +1,31 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat Dec  8 22:30:11 2018
+Created on Wed Aug  7 17:42:47 2019
 
-@author: Supercigar
+@author: Andreas
+Thanks to /u/sbjf on Reddit for heavy inspiration 
 """
 
+import csv
 import numpy as np
 from collections import Counter
-data = np.loadtxt("day06_input.txt", delimiter=", ", dtype=int)
+from scipy.spatial.distance import cdist
 
+coords = np.array([[int(x), int(y)] for x, y in csv.reader(open("day06_input.txt"))])
+ranges = np.array([np.min(coords, axis=0), np.max(coords, axis=0)])
+axes = [np.arange(MIN, MAX+1) for MIN, MAX in ranges.T]
+grid = np.array(np.meshgrid(axes[0], axes[1], indexing='ij')).reshape(2, -1).T
 
-# PART ONE
-def taxaDist(coord1, coord2):
-    return abs(coord2[0] - coord1[0]) + abs(coord2[1] - coord1[1])
+dists = cdist(grid, coords, metric="cityblock")
+minDists = np.min(dists, axis=1)
+d = (minDists[:, None] == dists)
+unique = (np.sum(d, axis=1) == 1)
+d = d[unique]
 
+borders = np.any(ranges[:, None] == grid, axis=(0, -1))[unique]
+dInf = np.any(d[borders], axis=0)
+dArea = np.sum(d, axis=0)
+dArea[dInf] = -1
 
-def getClosest(ref, coordList):
-    cI = cLen = 10000000
-    for i in range(len(coordList)):
-        if taxaDist(ref, coordList[i]) < cLen:
-            cI = i
-            cLen = taxaDist(ref, coordList[i])
-    return cI
-
-x_min, y_min = data.min(0)
-x_max, y_max = data.max(0) - [x_min, y_min]
-data = np.array([row-[x_min,y_min]+[5,5] for row in data])
-grid = np.zeros(shape=[y_max+10, x_max+10], dtype=int)
-for y in range(y_max+5):
-    for x in range(x_max+5):
-        grid[y,x] = getClosest([y,x], data)
-counter = Counter(grid.flatten())
-edges = np.concatenate((grid[:,0], grid[:,x_max], grid[0,:], grid[y_max,:]))
-for element in edges:
-    try:
-        counter.pop(element)
-    except KeyError:
-        pass
+print("Part one: {0}".format(max(dArea)))
+print("Part one: {0}".format(np.sum(np.sum(dists, axis=1) < 10000)))
