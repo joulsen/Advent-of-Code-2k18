@@ -5,31 +5,31 @@ Created on Sun Dec 23 20:33:42 2018
 @author: Supercigar
 """
 
-data = 939601
-recipes = "37"
+import numpy as np
 
-# PART ONE
-elves = [0,1]
-def makeRecipe(elves, recipes):
-    recipes += str(int(recipes[elves[0]]) + int(recipes[elves[1]]))
-    for i in range(len(elves)):
-            elves[i] = (int(recipes[elves[i]]) + elves[i] + 1) % len(recipes)
-    return elves, recipes
+recipes = 939601
+sRecipes = np.array([int(x) for x in list(str(recipes))])
 
-def getScore(elves, recipes, amount, score_buffer = 10):
-    elves = elves[:]
-    for i in range(amount + score_buffer):
-        elves, recipes = makeRecipe(elves, recipes)
-    return recipes[amount:amount+score_buffer]
 
-# PART TWO
-def partTwo(elves, recipes, score):
-    elves = elves[:]
-    while(score not in recipes[-len(score):]):
-        elves, recipes = makeRecipe(elves, recipes)
-    return len(recipes) - len(score)
+def partOne():
+    elf1 = 0
+    elf2 = 1
+    score = [3, 7]
+    while len(score) < recipes + 11:
+        new_recipe = map(int, list(str(score[elf1] + score[elf2])))
+        score += new_recipe
+        elf1 = (elf1 + score[elf1] + 1) % len(score)
+        elf2 = (elf2 + score[elf2] + 1) % len(score)
+    return score[recipes:recipes+10]
 
-# Taking too damn long. Needs an optimization
 
-# RESULTS
-print("Answer to part one is: {0}".format(makeRecipes(elves, recipes, data)))
+
+
+elf1 = 0
+elf2 = 0
+score = [3, 7]
+while not (np.array_equal(sRecipes, score[-7:-1]) or np.array_equal(sRecipes, score[-6:])):
+        new_recipe = map(int, list(str(score[elf1] + score[elf2])))
+        score += new_recipe
+        elf1 = (elf1 + score[elf1] + 1) % len(score)
+        elf2 = (elf2 + score[elf2] + 1) % len(score)
