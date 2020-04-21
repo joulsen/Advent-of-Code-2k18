@@ -23,25 +23,39 @@ def part_one(total):
 
 #%% Stuff for part two - not yet finished
 
-# Using itertools to get all 26 relative neighbor coordinates
-NEIGHBORS = list(product([1,0,-1],repeat=3))
-NEIGHBORS.remove((0,0,0))
-NEIGHBORS = np.array(NEIGHBORS)
-
-def get_neighbors(point):
-    return point - NEIGHBORS
+def distance_from_origin(point):
+    return np.sum(np.abs(point))
 
 def in_range_nanobots(point):
     points = np.sum(np.abs(nanobots - point), axis=1)
     points.resize(len(points), 1)
     return np.sum(points <= distances)
 
-def travel(point):
-    neighbors = get_neighbors(point)
-    in_range = -np.apply_along_axis(in_range_nanobots, 1, neighbors)
-    from_zero = np.sum(np.abs(neighbors),1)
-    total = np.array([in_range, from_zero, np.arange(0, 26)]).T
-    return total
+def get_boundaries(nanobots):
+    min_max = lambda i: (min(nanobots, key=lambda s: s[i])[i],
+                         max(nanobots, key=lambda s: s[i])[i])
+    return min_max(0), min_max(1), min_max(2)
+
+def find_best(step, nanobots, ranges):
+    value_key = lambda s: -in_range_nanobots(s) + distance_from_origin(s) / 1e9
+    xrange, yrange, zrange = ranges
+    points =  np.vstack(np.meshgrid(np.arange(*xrange, step),
+                                    np.arange(*yrange, step),
+                                    np.arange(*zrange, step))).reshape(3,-1).T
+    best = np.array(sorted(points, key=value_key))[0] # This part slows down the function a lot!!
+    x,y,z = [*best]
+    ranges = [(x, x + step), (y, y + step), (z, z + step)]
+    return ranges, best
+
+def part_two(nanobots):
+    ranges, best = find_best(1e6, nanobots, get_boundaries(nanobots))
+    ranges, best = find_best(1e5, nanobots, ranges)
+    ranges, best = find_best(1e4, nanobots, ranges)
+    ranges, best = find_best(1e3, nanobots, ranges)
+    ranges, best = find_best(1e2, nanobots, ranges)
+    ranges, best = find_best(1e1, nanobots, ranges)
+    return best
+
 
 #%% Results
 
@@ -51,3 +65,5 @@ if __name__ == "__main__":
     nanobots, distances = np.split(total, [3], 1)
     print("Answer to part 1 is: {}".format(part_one(total)))
     print("Part 2 has not (yet) been completed.")
+    part2 = part_two(nanobots)
+    print(part2, in_range_nanobots(part2), int(distance_from_origin(part2)))
