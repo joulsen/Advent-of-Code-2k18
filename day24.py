@@ -14,7 +14,7 @@ from math import ceil
 interpreter = re.compile(r"(?P<size>\d+) units each with (?P<hp>\d+) hit points \(?(?P<modifiers>.+?)?\)? ?with an attack that does (?P<atk>\d+) (?P<atk_type>\w+) damage at initiative (?P<initiative>\d+)")
 
 def parse_input():
-    with open("day24_example.txt") as file:
+    with open("day24_input.txt") as file:
         it = interpreter.finditer(file.read())
     armies = list(map(lambda a: a.groupdict(), it))
     for i, army in enumerate((armies)):
@@ -64,13 +64,56 @@ def find_target(attacker):
             break
         elif (optimal is None and attacker["atk_type"] not in enemy["immunity"]):
             optimal = enemy
-    print("{} group #{} targets enemy #{}".format(team[attacker["team"]], attacker["number"], optimal["number"]))
-    enemy["targeted"] = True
-    return optimal
+    if optimal is None:
+        print("{} group #{} cannot find a target.".format(team[attacker["team"]], attacker["number"]))
+        attacker["target"] = None
+        return None
+    else:
+        print("{} group #{} targets enemy #{}".format(team[attacker["team"]], attacker["number"], optimal["number"]))
+        attacker["target"] = optimal
+        enemy["targeted"] = True
+        return optimal
+
+def attack(attacker):
+    if attacker["target"] != None:
+        dmg = attacker["atk"] * attacker["size"]
+        enemy = attacker["target"]
+        if attacker["atk_type"] in enemy["weakness"]:
+            dmg *= 2
+        hp_after = enemy["size"] * enemy["hp"] - dmg
+        units_before = enemy["size"]
+        enemy["size"] = ceil(hp_after / enemy["hp"])
+        if enemy["size"] < 0:
+            enemy["size"] = 0
+        print("{} group #{} attacks enemy #{} for {} dmg, killing {} units and leaving {}.".format(team[attacker["team"]], attacker["number"], enemy["number"], 
+                                                                                                dmg, units_before - enemy["size"], enemy["size"]))
+        return 1
+    else:
+        return 0
+
+def turn():
+    update_ep()
+    armies = sort_by_ep()
+    for army in armies:
+        find_target(army)
+    armies = sort_by_initiative()
+    attacked = 0
+    for army in armies:
+        attacked += attack(army)
+    new_armies = []
+    for army in armies:
+        if army["size"] > 0:
+            army["targeted"] = False
+            new_armies.append(army)
+    print("")
+    return new_armies, (attacked > 0)
 
 armies = parse_input()
-update_ep()
-armies = sort_by_ep()
+while(True):
+    armies, attacked = turn()
+    if attacked == 0:
+        break
+print("Answer to part 1 is: {}".format(sum([a["size"] for a in armies])))
 
 for army in armies:
-    find_target(army)
+    print(army["size"])
